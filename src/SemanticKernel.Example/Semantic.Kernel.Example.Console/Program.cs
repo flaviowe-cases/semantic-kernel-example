@@ -11,8 +11,20 @@ builder.AddOpenAIChatCompletion(
 
 var kernel = builder.Build();
 
-// Primeiro prompt de teste
-Console.WriteLine("Enviando prompt para o modelo...");
-var response = await kernel.InvokePromptAsync("Explique o conceito de 'Memory Management' em .NET em uma frase.");
-
-Console.WriteLine($"Resposta: {response}");
+do
+{
+    Console.Write("voce diz -> ");
+    var message = Console.ReadLine();
+    
+    if  (string.IsNullOrEmpty(message))
+        continue;
+    
+    if (message == "exit")
+        break;
+    
+    var response = await  kernel.InvokePromptAsync(message);
+    
+    Console.Write("ollama diz -> ");
+    Console.WriteLine(response);
+     
+} while (true); 
