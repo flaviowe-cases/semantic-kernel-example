@@ -419,3 +419,4 @@ FodyWeavers.xsd
 
 ollama_data/
 qdrant_data/
+*.idea/
