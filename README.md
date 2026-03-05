@@ -1,7 +1,7 @@
 # semantic-kernel-example
 Laboratório para semantic kernel
 
-# comandos principais
+## comandos principais
 
 ``` shell
 
