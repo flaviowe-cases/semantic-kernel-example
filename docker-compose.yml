@@ -1,0 +1,31 @@
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama-local
+    ports:
+      - "11434:11434"
+    volumes:
+      - ./ollama_data:/root/.ollama
+    networks:
+      - ai-network
+    deploy:
+      resources:
+        limits:
+          memory: 3G # Limita o Ollama a 3GB, suficiente para modelos pequenos
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: qdrant-local
+    ports:
+      - "6333:6333"
+    volumes:
+      - ./qdrant_data:/qdrant/storage
+    networks:
+      - ai-network
+    deploy:
+      resources:
+        limits:
+          memory: 1G # O Qdrant é leve, 1GB é suficiente para começar
+
+networks:
+  ai-network:
+    driver: bridge
