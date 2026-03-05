@@ -1,4 +1,5 @@
 ﻿using Microsoft.SemanticKernel;
+using Semantic.Kernel.Example.Console;
 
 var builder = Kernel.CreateBuilder();
 
@@ -10,6 +11,8 @@ builder.AddOpenAIChatCompletion(
 );
 
 var kernel = builder.Build();
+
+kernel.ImportPluginFromType<PerformancePlugin>();
 
 do
 {
