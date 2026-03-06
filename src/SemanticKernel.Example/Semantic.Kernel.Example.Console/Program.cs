@@ -1,7 +1,13 @@
-﻿using Microsoft.SemanticKernel;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
 using Semantic.Kernel.Example.Console;
 
 var builder = Kernel.CreateBuilder();
+
+builder.Services.AddLogging(configure => configure.AddConsole());
+builder.Services.AddSingleton<IFunctionInvocationFilter, CustomFunctionFilter>();
 
 // Conectando ao Ollama rodando no Docker
 builder.AddOpenAIChatCompletion(
@@ -12,7 +18,15 @@ builder.AddOpenAIChatCompletion(
 
 var kernel = builder.Build();
 
-kernel.ImportPluginFromType<PerformancePlugin>();
+// Importando o plugin
+kernel.ImportPluginFromType<TodoPlugin>();
+kernel.ImportPluginFromType<GetCepPlugin>();
+
+// 2. Configura a execução para permitir que a IA chame ferramentas
+OpenAIPromptExecutionSettings settings = new() 
+{ 
+    ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions 
+};
 
 do
 {
@@ -25,7 +39,7 @@ do
     if (message == "exit")
         break;
     
-    var response = await  kernel.InvokePromptAsync(message);
+    var response = await  kernel.InvokePromptAsync(message, new KernelArguments(settings));
     
     Console.Write("ollama diz -> ");
     Console.WriteLine(response);
